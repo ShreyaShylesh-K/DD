@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>DD — Digital Diary</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:#f4f9ff;
+      color:#142033;
+      font-family:'Inter', sans-serif;
+      overflow-x:hidden;
+
+      background-image:
+        radial-gradient(circle at top left, rgba(190,220,255,0.65), transparent 32%),
+        linear-gradient(120deg, #edf7ff 0%, #f8fbff 45%, #eaf4ff 100%);
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    nav{
+      width:100%;
+      height:90px;
+      padding:0 70px;
+
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+
+      position:fixed;
+      top:0;
+      z-index:1000;
+
+      background:rgba(244,249,255,0.72);
+      backdrop-filter:blur(18px);
+
+      border-bottom:1px solid rgba(190,215,245,0.55);
+    }
+
+    .logo{
+      font-family:'Cormorant Garamond', serif;
+      font-size:2.4rem;
+      font-weight:500;
+      color:#315f96;
+      letter-spacing:2px;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:42px;
+
+      font-size:0.85rem;
+      text-transform:uppercase;
+      letter-spacing:3px;
+      color:#6e86a3;
+    }
+
+    .start-btn{
+      padding:14px 30px;
+      border-radius:18px;
+
+      border:1px solid #bdd7f7;
+      background:rgba(255,255,255,0.45);
+
+      color:#315f96;
+      transition:0.3s;
+    }
+
+    .start-btn:hover{
+      background:#d8ecff;
+      transform:translateY(-2px);
+    }
+
+    .hero{
+      min-height:100vh;
+      padding:150px 7% 70px;
+
+      display:grid;
+      grid-template-columns:1fr 0.9fr;
+      align-items:center;
+      gap:40px;
+    }
+
+    .hero-text{
+      max-width:780px;
+    }
+
+    .mini{
+      color:#8396ab;
+      font-size:0.85rem;
+      text-transform:uppercase;
+      letter-spacing:8px;
+      margin-bottom:42px;
+    }
+
+    h1{
+      font-family:'Cormorant Garamond', serif;
+      font-size:7.2rem;
+      line-height:0.9;
+      font-weight:500;
+      color:#162235;
+      margin-bottom:35px;
+    }
+
+    .highlight{
+      color:#9bc6ff;
+      font-style:italic;
+    }
+
+    .subtitle{
+      max-width:720px;
+      font-size:1.35rem;
+      line-height:1.9;
+      color:#6a7f96;
+      margin-bottom:45px;
+    }
+
+    .hero-buttons{
+      display:flex;
+      gap:20px;
+    }
+
+    button{
+      font-family:'Inter', sans-serif;
+    }
+
+    .primary-btn{
+      padding:20px 40px;
+
+      border:none;
+      border-radius:18px;
+
+      background:#cfe6ff;
+      color:#224d80;
+
+      font-size:1rem;
+      cursor:pointer;
+
+      transition:0.3s;
+      box-shadow:0 12px 30px rgba(155,198,255,0.25);
+    }
+
+    .primary-btn:hover{
+      background:#bddcff;
+      transform:translateY(-3px);
+    }
+
+    .secondary-btn{
+      padding:20px 40px;
+
+      border-radius:18px;
+      border:1px solid #d2e4f8;
+
+      background:rgba(255,255,255,0.55);
+      color:#315f96;
+
+      font-size:1rem;
+      cursor:pointer;
+
+      transition:0.3s;
+    }
+
+    .secondary-btn:hover{
+      background:white;
+      transform:translateY(-3px);
+    }
+
+    .bubble-area{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .bubble-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+    }
+
+    .fish-bubble{
+      width:100%;
+      max-width:560px;
+
+      animation:floatBubble 5s ease-in-out infinite;
+
+      filter:drop-shadow(0 25px 40px rgba(130,170,220,0.18));
+    }
+
+    .bubble-quote{
+      max-width:430px;
+
+      text-align:center;
+
+      font-family:'Cormorant Garamond', serif;
+      font-size:1.65rem;
+      font-style:italic;
+      line-height:1.4;
+
+      color:#6f8db1;
+      opacity:0.9;
+    }
+
+    @keyframes floatBubble{
+      0%{
+        transform:translateY(0px);
+      }
+
+      50%{
+        transform:translateY(-18px);
+      }
+
+      100%{
+        transform:translateY(0px);
+      }
+    }
+
+    .entry-preview{
+      width:82%;
+      margin:0 auto 100px;
+      padding:40px;
+
+      border-radius:26px;
+
+      background:rgba(255,255,255,0.48);
+      backdrop-filter:blur(18px);
+
+      border:1px solid rgba(195,220,248,0.8);
+      box-shadow:0 20px 50px rgba(150,190,230,0.12);
+    }
+
+    .tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-bottom:30px;
+    }
+
+    .tag{
+      padding:12px 20px;
+
+      border-radius:12px;
+
+      background:rgba(244,249,255,0.75);
+      border:1px solid #d8e9fb;
+
+      color:#6d83a0;
+
+      text-transform:uppercase;
+      letter-spacing:2px;
+      font-size:0.8rem;
+    }
+
+    .entry-text{
+      max-width:900px;
+      font-size:1.2rem;
+      line-height:2;
+      color:#5c7088;
+    }
+
+    .memories{
+      padding:110px 10%;
+    }
+
+    .section-title{
+      font-family:'Cormorant Garamond', serif;
+      font-size:4.5rem;
+      color:#162235;
+      margin-bottom:18px;
+    }
+    .memories-link-wrap{
+  margin-top:45px;
+}
+
+.memories-link{
+  display:inline-block;
+  padding:16px 30px;
+  border-radius:18px;
+  border:1px solid #bdd7f7;
+  background:rgba(255,255,255,0.55);
+  color:#315f96;
+  font-size:0.9rem;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  transition:0.3s;
+}
+
+.memories-link:hover{
+  background:#d8ecff;
+  transform:translateY(-2px);
+}
+
+    .memory-sub{
+      color:#73889f;
+      font-size:1.25rem;
+      margin-bottom:60px;
+    }
+
+    .memory-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+      gap:28px;
+    }
+
+    .memory-card{
+      padding:32px;
+
+      border-radius:24px;
+
+      background:rgba(255,255,255,0.55);
+      border:1px solid #d9e8f8;
+
+      box-shadow:0 15px 35px rgba(150,190,230,0.11);
+
+      transition:0.3s;
+    }
+
+    .memory-card:hover{
+      transform:translateY(-6px);
+    }
+
+    .memory-date{
+      text-transform:uppercase;
+      letter-spacing:3px;
+      font-size:0.75rem;
+      color:#8da3b8;
+      margin-bottom:18px;
+    }
+
+    .memory-title{
+      font-size:1.4rem;
+      color:#2b496d;
+      margin-bottom:14px;
+    }
+
+    .memory-desc{
+      color:#667b92;
+      line-height:1.8;
+    }
+
+    footer{
+      padding:70px;
+      text-align:center;
+      color:#7b91aa;
+      border-top:1px solid #d9e8f8;
+    }
+
+    @media(max-width:1000px){
+      .hero{
+        grid-template-columns:1fr;
+        text-align:left;
+      }
+
+      .bubble-area{
+        margin-top:20px;
+      }
+
+      h1{
+        font-size:5rem;
+      }
+
+      .fish-bubble{
+        max-width:430px;
+      }
+    }
+
+    @media(max-width:700px){
+      nav{
+        padding:0 22px;
+      }
+
+      .nav-links{
+        gap:16px;
+        font-size:0.6rem;
+      }
+
+      .start-btn{
+        padding:10px 16px;
+      }
+
+      h1{
+        font-size:3.8rem;
+      }
+
+      .subtitle{
+        font-size:1.05rem;
+      }
+
+      .hero-buttons{
+        flex-direction:column;
+      }
+
+      .entry-preview{
+        width:90%;
+        padding:28px;
+      }
+
+      .bubble-quote{
+        font-size:1.35rem;
+        max-width:320px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="logo">DD</div>
+
+    <div class="nav-links">
+  <a href="memories.html">Memories</a>
+  <a href="archive.html">Archive</a>
+  <a href="contact.html">Contact creator</a>
+  <a href="comments.html">Comments</a>
+  <a href="login.html">Log In</a>
+  <a href="start-writing.html" class="start-btn">Start Writing</a>
+</div>
+  </nav>
+
+  <section class="hero">
+
+    <div class="hero-text">
+
+      <div class="mini">
+        YOUR DIGITAL DIARY
+      </div>
+
+      <h1>
+        Preserve your<br>
+        <span class="highlight">moments</span>
+      </h1>
+
+      <p class="subtitle">
+        DD is a soft digital sanctuary for your thoughts,
+        emotions, memories, dreams, and late-night reflections.
+        Every journal entry is automatically timestamped —
+        creating a beautiful archive of your life.
+      </p>
+
+      <div class="hero-buttons">
+  <a href="#memories">
+    <button class="secondary-btn">Explore Memories</button>
+  </a>
+</div>
+
+    </div>
+
+    <div class="bubble-area">
+      <div class="bubble-wrap">
+
+        <img
+          src="fish-bubble.png"
+          alt="Tiny fish swimming inside a bubble"
+          class="fish-bubble"
+        >
+
+        <p class="bubble-quote">
+          It’s okay. You can stay in your bubble for a while.
+        </p>
+
+      </div>
+    </div>
+
+  </section>
+
+  <section class="entry-preview">
+
+    <div class="tags">
+      <div class="tag" id="dateTag">DATE</div>
+      <div class="tag" id="timeTag">TIME</div>
+      <div class="tag">Mood: Nostalgic</div>
+      <div class="tag">Digital Diary</div>
+    </div>
+
+    <div class="entry-text">
+      “Some memories disappear quietly.
+      DD exists so the little moments —
+      the ordinary conversations,
+      the late-night thoughts,
+      and the songs you once loved —
+      never completely fade away.”
+    </div>
+
+  </section>
+
+ <section class="memories" id="memories">
+
+  <h2 class="section-title">
+    A glimpse into your diary
+  </h2>
+
+  <p class="memory-sub">
+    These are sample memory cards. Once you start writing, your real entries will appear in your Memories page.
+  </p>
+
+  <div class="memory-grid">
+
+    <div class="memory-card">
+      <div class="memory-date">Sample Entry</div>
+
+      <div class="memory-title">
+        Rain at 2:13 AM
+      </div>
+
+      <div class="memory-desc">
+        A quiet late-night thought, saved before it disappeared.
+      </div>
+    </div>
+
+    <div class="memory-card">
+      <div class="memory-date">Sample Entry</div>
+
+      <div class="memory-title">
+        Blue Hour
+      </div>
+
+      <div class="memory-desc">
+        A soft evening memory written beneath sleepy city lights.
+      </div>
+    </div>
+
+    <div class="memory-card">
+      <div class="memory-date">Sample Entry</div>
+
+      <div class="memory-title">
+        The Quiet Era
+      </div>
+
+      <div class="memory-desc">
+        A small reminder to slow down, breathe, and simply exist.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="memories-link-wrap">
+    <a href="memories.html" class="memories-link">
+      View My Real Memories
+    </a>
+  </div>
+
+</section>
+
+  <footer>
+    © no ads . just life . 2026
+  </footer>
+
+  <script>
+    const now = new Date();
+
+    const dateOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    };
+
+    const formattedDate = now.toLocaleDateString('en-US', dateOptions);
+
+    const formattedTime = now.toLocaleTimeString([], {
+      hour:'2-digit',
+      minute:'2-digit'
+    });
+
+    document.getElementById("dateTag").innerText = formattedDate;
+    document.getElementById("timeTag").innerText = formattedTime;
+  </script>
+
+</body>
+</html>

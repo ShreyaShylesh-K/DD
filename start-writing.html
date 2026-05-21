@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Start Writing — DD</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      min-height:100vh;
+      background:#f4f9ff;
+      color:#142033;
+      font-family:'Inter', sans-serif;
+      background-image:
+        radial-gradient(circle at top left, rgba(190,220,255,0.65), transparent 32%),
+        linear-gradient(120deg, #edf7ff 0%, #f8fbff 45%, #eaf4ff 100%);
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    nav{
+      height:90px;
+      padding:0 70px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:rgba(244,249,255,0.72);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(190,215,245,0.55);
+    }
+
+    .logo{
+      font-family:'Cormorant Garamond', serif;
+      font-size:2.4rem;
+      color:#315f96;
+      letter-spacing:2px;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:35px;
+      align-items:center;
+      color:#6e86a3;
+      text-transform:uppercase;
+      letter-spacing:3px;
+      font-size:0.8rem;
+    }
+
+    .logout-btn{
+      border:1px solid #bdd7f7;
+      background:rgba(255,255,255,0.45);
+      color:#315f96;
+      padding:12px 22px;
+      border-radius:16px;
+      cursor:pointer;
+    }
+
+    .page{
+      padding:70px 8%;
+    }
+
+    .top-text{
+      margin-bottom:40px;
+    }
+
+    .mini{
+      color:#8396ab;
+      font-size:0.85rem;
+      text-transform:uppercase;
+      letter-spacing:8px;
+      margin-bottom:22px;
+    }
+
+    h1{
+      font-family:'Cormorant Garamond', serif;
+      font-size:5rem;
+      font-weight:500;
+      line-height:1;
+      color:#162235;
+      margin-bottom:18px;
+    }
+
+    .subtitle{
+      color:#6a7f96;
+      font-size:1.2rem;
+      line-height:1.8;
+      max-width:760px;
+    }
+
+    .journal-card{
+      background:rgba(255,255,255,0.58);
+      backdrop-filter:blur(18px);
+      border:1px solid #d9e8f8;
+      border-radius:32px;
+      padding:38px;
+      box-shadow:0 20px 60px rgba(150,190,230,0.16);
+      max-width:1000px;
+    }
+
+    .entry-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-bottom:28px;
+    }
+
+    .tag{
+      padding:12px 18px;
+      border-radius:13px;
+      background:#eef7ff;
+      border:1px solid #d8e9fb;
+      color:#6d83a0;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      font-size:0.78rem;
+    }
+
+    label{
+      display:block;
+      color:#4f6988;
+      margin-bottom:10px;
+      font-size:0.95rem;
+    }
+
+    input, select, textarea{
+      width:100%;
+      border:1px solid #d5e7f8;
+      background:#fbfdff;
+      border-radius:18px;
+      padding:16px;
+      font-size:1rem;
+      outline:none;
+      color:#142033;
+      font-family:'Inter', sans-serif;
+      margin-bottom:24px;
+    }
+
+    input:focus, select:focus, textarea:focus{
+      border-color:#9bc6ff;
+      box-shadow:0 0 0 4px rgba(155,198,255,0.18);
+    }
+
+    textarea{
+      min-height:280px;
+      resize:vertical;
+      line-height:1.8;
+    }
+
+    .actions{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .save-btn{
+      padding:17px 34px;
+      border:none;
+      border-radius:18px;
+      background:#cfe6ff;
+      color:#224d80;
+      font-size:1rem;
+      cursor:pointer;
+      box-shadow:0 12px 30px rgba(155,198,255,0.25);
+      transition:0.3s;
+    }
+
+    .save-btn:hover{
+      background:#bddcff;
+      transform:translateY(-2px);
+    }
+
+    .clear-btn{
+      padding:17px 34px;
+      border:1px solid #d2e4f8;
+      border-radius:18px;
+      background:rgba(255,255,255,0.55);
+      color:#315f96;
+      font-size:1rem;
+      cursor:pointer;
+    }
+
+    .saved-message{
+      display:none;
+      margin-top:25px;
+      color:#5079a8;
+      background:#eef7ff;
+      padding:16px;
+      border-radius:18px;
+      line-height:1.6;
+    }
+
+    .old-entries{
+      margin-top:45px;
+      max-width:1000px;
+    }
+
+    .old-entries h2{
+      font-family:'Cormorant Garamond', serif;
+      font-size:3rem;
+      font-weight:500;
+      margin-bottom:25px;
+    }
+
+    .entry-item{
+      background:rgba(255,255,255,0.55);
+      border:1px solid #d9e8f8;
+      border-radius:24px;
+      padding:25px;
+      margin-bottom:18px;
+    }
+
+    .entry-item-date{
+      color:#8da3b8;
+      text-transform:uppercase;
+      letter-spacing:2px;
+      font-size:0.75rem;
+      margin-bottom:10px;
+    }
+
+    .entry-item-title{
+      font-size:1.3rem;
+      color:#2b496d;
+      margin-bottom:10px;
+    }
+
+    .entry-item-text{
+      color:#667b92;
+      line-height:1.8;
+      white-space:pre-wrap;
+    }
+
+    @media(max-width:700px){
+      nav{
+        padding:0 22px;
+      }
+
+      .nav-links{
+        gap:14px;
+        font-size:0.6rem;
+      }
+
+      h1{
+        font-size:3.6rem;
+      }
+
+      .page{
+        padding:50px 6%;
+      }
+
+      .journal-card{
+        padding:25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">DD</a>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="#entries">Memories</a>
+      <button class="logout-btn" id="logoutBtn">Log Out</button>
+    </div>
+  </nav>
+
+  <main class="page">
+
+    <section class="top-text">
+      <div class="mini">YOUR QUIET SPACE</div>
+
+      <h1>
+        Start writing.
+      </h1>
+
+      <p class="subtitle" id="welcomeText">
+        Write what happened, what hurt, what mattered, what changed, or what you want to remember.
+      </p>
+    </section>
+
+    <section class="journal-card">
+
+      <div class="entry-meta">
+        <div class="tag" id="dateTag">DATE</div>
+        <div class="tag" id="timeTag">TIME</div>
+        <div class="tag">Private Entry</div>
+      </div>
+
+      <form id="journalForm">
+
+        <label>Entry Title</label>
+        <input type="text" id="entryTitle" placeholder="Give this moment a name..." required>
+
+        <label>Mood</label>
+        <select id="entryMood">
+          <option>Calm</option>
+          <option>Happy</option>
+          <option>Sad</option>
+          <option>Overthinking</option>
+          <option>Grateful</option>
+          <option>Nostalgic</option>
+          <option>Confused</option>
+          <option>Hopeful</option>
+        </select>
+        <label>Who can see this entry?</label>
+<select id="entryVisibility">
+  <option value="Private">Private — only me</option>
+  <option value="Public">Public — everyone</option>
+  <option value="Followers Only">Followers Only — people who follow me</option>
+</select>
+
+        <label>Your Entry</label>
+        <textarea id="entryText" placeholder="Dear diary..." required></textarea>
+
+        <div class="actions">
+          <button type="submit" class="save-btn">Save Entry</button>
+          <button type="button" class="clear-btn" id="clearBtn">Clear</button>
+        </div>
+
+      </form>
+
+      <div class="saved-message" id="savedMessage">
+        Your entry has been saved in this browser.
+      </div>
+
+    </section>
+
+    <section class="old-entries" id="entries">
+      <h2>Your Memories</h2>
+      <div id="entriesList"></div>
+    </section>
+
+  </main>
+
+  <script>
+    const loggedIn = localStorage.getItem("ddLoggedIn");
+
+    if(loggedIn !== "true"){
+      window.location.href = "login.html";
+    }
+
+    const now = new Date();
+
+    const formattedDate = now.toLocaleDateString('en-US', {
+      year:'numeric',
+      month:'long',
+      day:'numeric'
+    });
+
+    const formattedTime = now.toLocaleTimeString([], {
+      hour:'2-digit',
+      minute:'2-digit'
+    });
+
+    document.getElementById("dateTag").innerText = formattedDate;
+    document.getElementById("timeTag").innerText = formattedTime;
+
+    const userName = localStorage.getItem("ddUserName");
+
+    if(userName){
+      document.getElementById("welcomeText").innerText =
+        "Welcome back, " + userName + ". This space is yours. Write slowly.";
+    }
+
+    const journalForm = document.getElementById("journalForm");
+    const savedMessage = document.getElementById("savedMessage");
+    const entriesList = document.getElementById("entriesList");
+
+    function loadEntries(){
+      const entries = JSON.parse(localStorage.getItem("ddEntries")) || [];
+
+      entriesList.innerHTML = "";
+
+      if(entries.length === 0){
+        entriesList.innerHTML = "<p style='color:#73889f;'>No entries yet. Your first memory will appear here.</p>";
+        return;
+      }
+
+      entries.reverse().forEach(function(entry){
+        const entryDiv = document.createElement("div");
+        entryDiv.className = "entry-item";
+
+        entryDiv.innerHTML = `
+<div class="entry-item-date">
+  ${entry.date} at ${entry.time} • Mood: ${entry.mood} • ${entry.visibility}
+</div>          <div class="entry-item-title">${entry.title}</div>
+          <div class="entry-item-text">${entry.text}</div>
+        `;
+
+        entriesList.appendChild(entryDiv);
+      });
+    }
+
+    journalForm.addEventListener("submit", function(event){
+      event.preventDefault();
+
+      const title = document.getElementById("entryTitle").value;
+      const mood = document.getElementById("entryMood").value;
+      const visibility = document.getElementById("entryVisibility").value;
+      const text = document.getElementById("entryText").value;    
+      const entry = {
+  title:title,
+  mood:mood,
+  visibility:visibility,
+  text:text,
+  date:formattedDate,
+  time:formattedTime
+};
+
+      const entries = JSON.parse(localStorage.getItem("ddEntries")) || [];
+
+      entries.push(entry);
+
+      localStorage.setItem("ddEntries", JSON.stringify(entries));
+
+      journalForm.reset();
+
+      savedMessage.style.display = "block";
+
+      setTimeout(function(){
+        savedMessage.style.display = "none";
+      }, 3000);
+
+      loadEntries();
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", function(){
+      document.getElementById("entryTitle").value = "";
+      document.getElementById("entryText").value = "";
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", function(){
+      localStorage.removeItem("ddLoggedIn");
+      window.location.href = "login.html";
+    });
+
+    loadEntries();
+  </script>
+
+</body>
+</html>

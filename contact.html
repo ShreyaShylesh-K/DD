@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Contact — DD</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      min-height:100vh;
+      background:#f4f9ff;
+      color:#142033;
+      font-family:'Inter', sans-serif;
+      background-image:
+        radial-gradient(circle at top left, rgba(190,220,255,0.65), transparent 32%),
+        linear-gradient(120deg, #edf7ff 0%, #f8fbff 45%, #eaf4ff 100%);
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    nav{
+      height:90px;
+      padding:0 70px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:rgba(244,249,255,0.72);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(190,215,245,0.55);
+    }
+
+    .logo{
+      font-family:'Cormorant Garamond', serif;
+      font-size:2.4rem;
+      color:#315f96;
+      letter-spacing:2px;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:35px;
+      font-size:0.82rem;
+      text-transform:uppercase;
+      letter-spacing:3px;
+      color:#6e86a3;
+    }
+
+    .start-btn{
+      padding:14px 30px;
+      border-radius:18px;
+      border:1px solid #bdd7f7;
+      background:rgba(255,255,255,0.45);
+      color:#315f96;
+    }
+
+    main{
+      padding:80px 10%;
+    }
+
+    .top-section{
+      display:grid;
+      grid-template-columns:0.9fr 1.1fr;
+      gap:60px;
+      align-items:start;
+      margin-bottom:80px;
+    }
+
+    .mini{
+      color:#8396ab;
+      font-size:0.85rem;
+      text-transform:uppercase;
+      letter-spacing:8px;
+      margin-bottom:25px;
+    }
+
+    h1{
+      font-family:'Cormorant Garamond', serif;
+      font-size:5.5rem;
+      font-weight:500;
+      line-height:1;
+      color:#162235;
+      margin-bottom:25px;
+    }
+
+    .subtitle{
+      color:#6a7f96;
+      font-size:1.2rem;
+      line-height:1.9;
+      max-width:650px;
+      margin-bottom:35px;
+    }
+
+    .mail-card{
+      padding:28px;
+      border-radius:26px;
+      background:rgba(255,255,255,0.58);
+      border:1px solid #d9e8f8;
+      box-shadow:0 15px 35px rgba(150,190,230,0.12);
+      max-width:520px;
+    }
+
+    .mail-label{
+      text-transform:uppercase;
+      letter-spacing:3px;
+      color:#8da3b8;
+      font-size:0.75rem;
+      margin-bottom:12px;
+    }
+
+    .mail-link{
+      font-size:1.15rem;
+      color:#315f96;
+      word-break:break-word;
+    }
+
+    .form-card,
+    .messages-card{
+      padding:38px;
+      border-radius:30px;
+      background:rgba(255,255,255,0.62);
+      backdrop-filter:blur(18px);
+      border:1px solid #d9e8f8;
+      box-shadow:0 20px 60px rgba(150,190,230,0.16);
+    }
+
+    .form-card h2,
+    .messages-card h2{
+      font-family:'Cormorant Garamond', serif;
+      font-size:3rem;
+      font-weight:500;
+      color:#162235;
+      margin-bottom:12px;
+    }
+
+    .form-card p,
+    .messages-card p{
+      color:#6a7f96;
+      line-height:1.8;
+      margin-bottom:30px;
+    }
+
+    label{
+      display:block;
+      color:#4f6988;
+      margin-bottom:9px;
+      font-size:0.95rem;
+    }
+
+    input,
+    select,
+    textarea{
+      width:100%;
+      padding:16px;
+      margin-bottom:22px;
+      border-radius:18px;
+      border:1px solid #d5e7f8;
+      background:#fbfdff;
+      color:#142033;
+      font-size:1rem;
+      font-family:'Inter', sans-serif;
+      outline:none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus{
+      border-color:#9bc6ff;
+      box-shadow:0 0 0 4px rgba(155,198,255,0.18);
+    }
+
+    input[readonly]{
+      background:#eef7ff;
+      color:#6e86a3;
+      cursor:not-allowed;
+    }
+
+    textarea{
+      min-height:170px;
+      resize:vertical;
+      line-height:1.7;
+    }
+
+    .submit-btn,
+    .clear-btn{
+      padding:17px 34px;
+      border:none;
+      border-radius:18px;
+      background:#cfe6ff;
+      color:#224d80;
+      font-size:1rem;
+      cursor:pointer;
+      transition:0.3s;
+      box-shadow:0 12px 30px rgba(155,198,255,0.25);
+    }
+
+    .submit-btn:hover,
+    .clear-btn:hover{
+      background:#bddcff;
+      transform:translateY(-2px);
+    }
+
+    .clear-btn{
+      display:none;
+      margin-top:25px;
+      background:#fff;
+      border:1px solid #bdd7f7;
+      box-shadow:none;
+    }
+
+    .success-message{
+      display:none;
+      margin-top:22px;
+      padding:16px;
+      border-radius:18px;
+      background:#eef7ff;
+      color:#5079a8;
+      line-height:1.7;
+    }
+
+    .messages-list{
+      display:grid;
+      gap:20px;
+      margin-top:30px;
+    }
+
+    .message-item{
+      padding:24px;
+      border-radius:22px;
+      background:rgba(255,255,255,0.68);
+      border:1px solid #d9e8f8;
+    }
+
+    .message-top{
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+      color:#8da3b8;
+      font-size:0.78rem;
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+
+    .message-name{
+      font-size:1.3rem;
+      color:#2b496d;
+      margin-bottom:8px;
+    }
+
+    .message-email{
+      color:#315f96;
+      margin-bottom:15px;
+      word-break:break-word;
+    }
+
+    .message-text{
+      color:#667b92;
+      line-height:1.8;
+      white-space:pre-wrap;
+    }
+
+    .empty{
+      padding:25px;
+      border-radius:20px;
+      background:rgba(255,255,255,0.55);
+      border:1px solid #d9e8f8;
+      color:#73889f;
+      line-height:1.8;
+    }
+
+    .admin-badge{
+      display:inline-block;
+      margin-bottom:20px;
+      padding:10px 16px;
+      border-radius:999px;
+      background:#eef7ff;
+      border:1px solid #d9e8f8;
+      color:#315f96;
+      font-size:0.8rem;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    @media(max-width:900px){
+      .top-section{
+        grid-template-columns:1fr;
+      }
+
+      main{
+        padding:60px 7%;
+      }
+
+      nav{
+        padding:0 22px;
+      }
+
+      .nav-links{
+        gap:16px;
+        font-size:0.58rem;
+      }
+
+      h1{
+        font-size:3.8rem;
+      }
+
+      .form-card,
+      .messages-card{
+        padding:28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">DD</a>
+
+    <div class="nav-links">
+      <a href="memories.html">Memories</a>
+      <a href="archive.html">Archive</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Log In</a>
+      <a href="start-writing.html" class="start-btn">Start Writing</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <section class="top-section">
+
+      <section>
+        <div class="mini">TALK TO DD</div>
+
+        <h1>Contact</h1>
+
+        <p class="subtitle">
+          Have a suggestion, complaint, feature idea, or found something that does not feel right?
+          Leave a note here so DD can become softer, safer, and better.
+        </p>
+
+        <div class="mail-card">
+          <div class="mail-label">Creator's Email</div>
+
+          <a href="mailto:buttercupppg028@gmail.com" class="mail-link">
+            buttercupppg028@gmail.com
+          </a>
+        </div>
+      </section>
+
+      <section class="form-card">
+
+        <h2>Suggestion Box</h2>
+
+        <p>
+          Write your name, email, and suggestion or issue. You will be able to see your own submitted messages later.
+        </p>
+
+        <form id="suggestionForm">
+
+          <label>Your Name</label>
+          <input type="text" id="name" placeholder="Enter your name" required>
+
+          <label>Your Email</label>
+          <input type="email" id="email" placeholder="you@example.com" required>
+
+          <label>Type of Message</label>
+          <select id="type">
+            <option>Suggestion</option>
+            <option>Complaint</option>
+            <option>Bug / Issue</option>
+            <option>Feature Request</option>
+            <option>Privacy Concern</option>
+            <option>General Feedback</option>
+          </select>
+
+          <label>Your Message</label>
+          <textarea id="messageBox" placeholder="Write your suggestion, complaint, or issue here..." required></textarea>
+
+          <button type="submit" class="submit-btn">
+            Submit Message
+          </button>
+
+        </form>
+
+        <div class="success-message" id="successMessage">
+          Thank you. Your message has been saved.
+        </div>
+
+      </section>
+
+    </section>
+
+    <section class="messages-card">
+
+      <div id="adminBadge"></div>
+
+      <h2 id="messagesTitle">
+        My Messages
+      </h2>
+
+      <p id="messagesDescription">
+        These are the suggestions, complaints, and issues you have submitted.
+      </p>
+
+      <div class="messages-list" id="messagesList"></div>
+
+      <button class="clear-btn" id="clearMessagesBtn">
+        Clear All Messages
+      </button>
+
+    </section>
+
+  </main>
+
+  <script>
+    const ADMIN_EMAIL = "buttercupppg028@gmail.com";
+
+    const loggedIn = localStorage.getItem("ddLoggedIn");
+    const currentUserEmail = localStorage.getItem("ddUserEmail");
+
+    if(loggedIn !== "true" || !currentUserEmail){
+      window.location.href = "login.html";
+    }
+
+    const isAdmin =
+      currentUserEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+    const suggestionForm = document.getElementById("suggestionForm");
+    const successMessage = document.getElementById("successMessage");
+    const messagesList = document.getElementById("messagesList");
+    const clearMessagesBtn = document.getElementById("clearMessagesBtn");
+    const messagesTitle = document.getElementById("messagesTitle");
+    const messagesDescription = document.getElementById("messagesDescription");
+    const adminBadge = document.getElementById("adminBadge");
+
+    if(isAdmin){
+      adminBadge.innerHTML = `<span class="admin-badge">Creator View</span>`;
+      messagesTitle.innerText = "Received Messages";
+      messagesDescription.innerText =
+        "You are logged in as the creator, so you can see all user messages.";
+      clearMessagesBtn.style.display = "inline-block";
+    }
+
+    if(currentUserEmail && !isAdmin){
+      document.getElementById("email").value = currentUserEmail;
+      document.getElementById("email").readOnly = true;
+    }
+
+    function loadMessages(){
+      const allMessages =
+        JSON.parse(localStorage.getItem("ddSuggestions")) || [];
+
+      let visibleMessages = allMessages;
+
+      if(!isAdmin){
+        visibleMessages = allMessages.filter(function(item){
+          return item.email.toLowerCase() === currentUserEmail.toLowerCase();
+        });
+      }
+
+      messagesList.innerHTML = "";
+
+      if(visibleMessages.length === 0){
+        if(isAdmin){
+          messagesList.innerHTML = `
+            <div class="empty">
+              No messages yet. User suggestions, complaints, and issues will appear here.
+            </div>
+          `;
+        } else {
+          messagesList.innerHTML = `
+            <div class="empty">
+              You have not submitted any messages yet.
+            </div>
+          `;
+        }
+
+        return;
+      }
+
+      visibleMessages.reverse().forEach(function(item){
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message-item";
+
+        messageDiv.innerHTML = `
+          <div class="message-top">
+            <span>${item.type}</span>
+            <span>${item.date}</span>
+          </div>
+
+          <div class="message-name">
+            ${item.name}
+          </div>
+
+          <div class="message-email">
+            ${item.email}
+          </div>
+
+          <div class="message-text">
+            ${item.message}
+          </div>
+        `;
+
+        messagesList.appendChild(messageDiv);
+      });
+    }
+
+    suggestionForm.addEventListener("submit", function(event){
+      event.preventDefault();
+
+      const submittedEmail = document.getElementById("email").value;
+
+      const message = {
+        name: document.getElementById("name").value,
+        email: submittedEmail,
+        type: document.getElementById("type").value,
+        message: document.getElementById("messageBox").value,
+        date: new Date().toLocaleString()
+      };
+
+      const messages =
+        JSON.parse(localStorage.getItem("ddSuggestions")) || [];
+
+      messages.push(message);
+
+      localStorage.setItem("ddSuggestions", JSON.stringify(messages));
+
+      suggestionForm.reset();
+
+      if(!isAdmin){
+        document.getElementById("email").value = currentUserEmail;
+        document.getElementById("email").readOnly = true;
+      }
+
+      successMessage.style.display = "block";
+
+      setTimeout(function(){
+        successMessage.style.display = "none";
+      }, 3000);
+
+      loadMessages();
+    });
+
+    clearMessagesBtn.addEventListener("click", function(){
+      if(!isAdmin){
+        return;
+      }
+
+      const confirmDelete =
+        confirm("Are you sure you want to clear all saved messages?");
+
+      if(confirmDelete){
+        localStorage.removeItem("ddSuggestions");
+        loadMessages();
+      }
+    });
+
+    loadMessages();
+  </script>
+
+</body>
+</html>
