@@ -319,6 +319,18 @@
         padding:28px;
       }
     }
+    .creator-badge{
+  display:inline-block;
+  margin-bottom:14px;
+  padding:6px 12px;
+  border-radius:999px;
+  background:#eef7ff;
+  border:1px solid #d9e8f8;
+  color:#315f96;
+  font-size:0.75rem;
+  font-weight:600;
+  letter-spacing:1px;
+}
   </style>
 </head>
 
@@ -460,24 +472,31 @@
         const commentDiv = document.createElement("div");
         commentDiv.className = "comment-item";
 
-        commentDiv.innerHTML = `
-          <div class="comment-top">
-            <span>${comment.date}</span>
-            <span>${comment.id}</span>
-          </div>
+        const creatorBadge =
+  comment.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
+    ? '<div class="creator-badge">🌷 Creator of DD</div>'
+    : '';
 
-          <div class="comment-name">
-            ${comment.name}
-          </div>
+commentDiv.innerHTML = `
+  <div class="comment-top">
+    <span>${comment.date}</span>
+    <span>${comment.id}</span>
+  </div>
 
-          <div class="comment-text">
-            ${comment.text}
-          </div>
+  <div class="comment-name">
+    ${comment.name}
+  </div>
 
-          <button class="delete-btn" data-id="${comment.id}">
-            Delete Comment
-          </button>
-        `;
+  ${creatorBadge}
+
+  <div class="comment-text">
+    ${comment.text}
+  </div>
+
+  <button class="delete-btn" data-id="${comment.id}">
+    Delete Comment
+  </button>
+`;
 
         commentsList.appendChild(commentDiv);
       });
