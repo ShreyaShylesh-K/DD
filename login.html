@@ -315,16 +315,19 @@
       <path d="M7 15.5l-1.2 2M10.5 16.5l-.4 2.2M14 16.5l.4 2.2M17 15.5l1.2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </svg>
   `;
+  togglePassword.innerHTML = closedEye;
 
   togglePassword.addEventListener("click", function(){
     if(passwordInput.type === "password"){
-      passwordInput.type = "text";
-      togglePassword.innerHTML = closedEye;
-    } else {
-      passwordInput.type = "password";
-      togglePassword.innerHTML = openEye;
-    }
+  passwordInput.type = "text";
+  togglePassword.innerHTML = openEye;
+} else {
+  passwordInput.type = "password";
+  togglePassword.innerHTML = closedEye;
+}
   });
+  
+
 
   let mode = "login";
 
