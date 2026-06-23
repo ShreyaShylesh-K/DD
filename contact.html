@@ -12,11 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+    *{margin:0;padding:0;box-sizing:border-box;}
 
     body{
       min-height:100vh;
@@ -28,10 +24,7 @@
         linear-gradient(120deg, #edf7ff 0%, #f8fbff 45%, #eaf4ff 100%);
     }
 
-    a{
-      text-decoration:none;
-      color:inherit;
-    }
+    a{text-decoration:none;color:inherit;}
 
     nav{
       height:90px;
@@ -69,9 +62,7 @@
       color:#315f96;
     }
 
-    main{
-      padding:80px 10%;
-    }
+    main{padding:80px 10%;}
 
     .top-section{
       display:grid;
@@ -123,10 +114,9 @@
       margin-bottom:12px;
     }
 
-    .mail-link{
-      font-size:1.15rem;
-      color:#315f96;
-      word-break:break-word;
+    .mail-card p{
+      color:#6a7f96;
+      line-height:1.8;
     }
 
     .form-card,
@@ -196,8 +186,7 @@
       line-height:1.7;
     }
 
-    .submit-btn,
-    .clear-btn{
+    .submit-btn{
       padding:17px 34px;
       border:none;
       border-radius:18px;
@@ -209,18 +198,9 @@
       box-shadow:0 12px 30px rgba(155,198,255,0.25);
     }
 
-    .submit-btn:hover,
-    .clear-btn:hover{
+    .submit-btn:hover{
       background:#bddcff;
       transform:translateY(-2px);
-    }
-
-    .clear-btn{
-      display:none;
-      margin-top:25px;
-      background:#fff;
-      border:1px solid #bdd7f7;
-      box-shadow:none;
     }
 
     .success-message{
@@ -230,6 +210,17 @@
       border-radius:18px;
       background:#eef7ff;
       color:#5079a8;
+      line-height:1.7;
+    }
+
+    .error-message{
+      display:none;
+      margin-top:22px;
+      padding:16px;
+      border-radius:18px;
+      background:#fff2f2;
+      color:#9b3d3d;
+      border:1px solid #ffd1d1;
       line-height:1.7;
     }
 
@@ -285,45 +276,13 @@
       line-height:1.8;
     }
 
-    .admin-badge{
-      display:inline-block;
-      margin-bottom:20px;
-      padding:10px 16px;
-      border-radius:999px;
-      background:#eef7ff;
-      border:1px solid #d9e8f8;
-      color:#315f96;
-      font-size:0.8rem;
-      letter-spacing:2px;
-      text-transform:uppercase;
-    }
-
     @media(max-width:900px){
-      .top-section{
-        grid-template-columns:1fr;
-      }
-
-      main{
-        padding:60px 7%;
-      }
-
-      nav{
-        padding:0 22px;
-      }
-
-      .nav-links{
-        gap:16px;
-        font-size:0.58rem;
-      }
-
-      h1{
-        font-size:3.8rem;
-      }
-
-      .form-card,
-      .messages-card{
-        padding:28px;
-      }
+      .top-section{grid-template-columns:1fr;}
+      main{padding:60px 7%;}
+      nav{padding:0 22px;}
+      .nav-links{gap:16px;font-size:0.58rem;}
+      h1{font-size:3.8rem;}
+      .form-card,.messages-card{padding:28px;}
     }
   </style>
 </head>
@@ -357,11 +316,10 @@
         </p>
 
         <div class="mail-card">
-          <div class="mail-label">Got anything to say ??</div>
-
+          <div class="mail-label">CONTACT</div>
           <p>
-  Have a question, suggestion, or feedback? Send it through the form below.
-</p>
+            For privacy, the creator's email is not shown publicly. Please send your message through the suggestion box.
+          </p>
         </div>
       </section>
 
@@ -370,7 +328,7 @@
         <h2>Suggestion Box</h2>
 
         <p>
-          Write your name, email, and suggestion or issue. You will be able to see your own submitted messages later.
+          Write your name and message. Your account email will be attached privately to your submission.
         </p>
 
         <form id="suggestionForm">
@@ -379,7 +337,7 @@
           <input type="text" id="name" placeholder="Enter your name" required>
 
           <label>Your Email</label>
-          <input type="email" id="email" placeholder="you@example.com" required>
+          <input type="email" id="email" placeholder="you@example.com" readonly required>
 
           <label>Type of Message</label>
           <select id="type">
@@ -401,8 +359,10 @@
         </form>
 
         <div class="success-message" id="successMessage">
-          Thank you. Your message has been saved.
+          Thank you. Your message has been saved securely.
         </div>
+
+        <div class="error-message" id="errorMessage"></div>
 
       </section>
 
@@ -410,170 +370,200 @@
 
     <section class="messages-card">
 
-      <div id="adminBadge"></div>
+      <h2>My Messages</h2>
 
-      <h2 id="messagesTitle">
-        My Messages
-      </h2>
-
-      <p id="messagesDescription">
+      <p>
         These are the suggestions, complaints, and issues you have submitted.
       </p>
 
       <div class="messages-list" id="messagesList"></div>
 
-      <button class="clear-btn" id="clearMessagesBtn">
-        Clear All Messages
-      </button>
-
     </section>
 
   </main>
 
-  <script>
-    const ADMIN_EMAIL = "buttercupppg028@gmail.com";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
-    const loggedIn = localStorage.getItem("ddLoggedIn");
-    const currentUserEmail = localStorage.getItem("ddUserEmail");
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-    if(loggedIn !== "true" || !currentUserEmail){
-      window.location.href = "login.html";
-    }
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      query,
+      where,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    const isAdmin =
-      currentUserEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    const firebaseConfig = {
+      apiKey: "AIzaSyA7fHkvR6k_fgRuOJbxodkpkiE1jCDLf9g",
+      authDomain: "digital-diary-ca107.firebaseapp.com",
+      projectId: "digital-diary-ca107",
+      storageBucket: "digital-diary-ca107.firebasestorage.app",
+      messagingSenderId: "521769609216",
+      appId: "1:521769609216:web:0cdf66e7133503891250e5",
+      measurementId: "G-ZKTLBKSRRH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
     const suggestionForm = document.getElementById("suggestionForm");
     const successMessage = document.getElementById("successMessage");
+    const errorMessage = document.getElementById("errorMessage");
     const messagesList = document.getElementById("messagesList");
-    const clearMessagesBtn = document.getElementById("clearMessagesBtn");
-    const messagesTitle = document.getElementById("messagesTitle");
-    const messagesDescription = document.getElementById("messagesDescription");
-    const adminBadge = document.getElementById("adminBadge");
 
-    if(isAdmin){
-      adminBadge.innerHTML = `<span class="admin-badge">Creator View</span>`;
-      messagesTitle.innerText = "Received Messages";
-      messagesDescription.innerText =
-        "You are logged in as the creator, so you can see all user messages.";
-      clearMessagesBtn.style.display = "inline-block";
+    let currentUser = null;
+
+    function showError(message){
+      errorMessage.innerText = message;
+      errorMessage.style.display = "block";
+
+      setTimeout(function(){
+        errorMessage.style.display = "none";
+      }, 4000);
     }
 
-    if(currentUserEmail && !isAdmin){
-      document.getElementById("email").value = currentUserEmail;
-      document.getElementById("email").readOnly = true;
-    }
-
-    function loadMessages(){
-      const allMessages =
-        JSON.parse(localStorage.getItem("ddSuggestions")) || [];
-
-      let visibleMessages = allMessages;
-
-      if(!isAdmin){
-        visibleMessages = allMessages.filter(function(item){
-          return item.email.toLowerCase() === currentUserEmail.toLowerCase();
-        });
-      }
-
-      messagesList.innerHTML = "";
-
-      if(visibleMessages.length === 0){
-        if(isAdmin){
-          messagesList.innerHTML = `
-            <div class="empty">
-              No messages yet. User suggestions, complaints, and issues will appear here.
-            </div>
-          `;
-        } else {
-          messagesList.innerHTML = `
-            <div class="empty">
-              You have not submitted any messages yet.
-            </div>
-          `;
-        }
-
-        return;
-      }
-
-      visibleMessages.reverse().forEach(function(item){
-        const messageDiv = document.createElement("div");
-        messageDiv.className = "message-item";
-
-        messageDiv.innerHTML = `
-          <div class="message-top">
-            <span>${item.type}</span>
-            <span>${item.date}</span>
-          </div>
-
-          <div class="message-name">
-            ${item.name}
-          </div>
-
-          <div class="message-email">
-            ${item.email}
-          </div>
-
-          <div class="message-text">
-            ${item.message}
-          </div>
-        `;
-
-        messagesList.appendChild(messageDiv);
-      });
-    }
-
-    suggestionForm.addEventListener("submit", function(event){
-      event.preventDefault();
-
-      const submittedEmail = document.getElementById("email").value;
-
-      const message = {
-        name: document.getElementById("name").value,
-        email: submittedEmail,
-        type: document.getElementById("type").value,
-        message: document.getElementById("messageBox").value,
-        date: new Date().toLocaleString()
-      };
-
-      const messages =
-        JSON.parse(localStorage.getItem("ddSuggestions")) || [];
-
-      messages.push(message);
-
-      localStorage.setItem("ddSuggestions", JSON.stringify(messages));
-
-      suggestionForm.reset();
-
-      if(!isAdmin){
-        document.getElementById("email").value = currentUserEmail;
-        document.getElementById("email").readOnly = true;
-      }
-
+    function showSuccess(){
       successMessage.style.display = "block";
 
       setTimeout(function(){
         successMessage.style.display = "none";
       }, 3000);
+    }
+
+    async function loadMessages(){
+      if(!currentUser){
+        return;
+      }
+
+      messagesList.innerHTML = `
+        <div class="empty">
+          Loading your messages...
+        </div>
+      `;
+
+      try{
+        const messagesQuery = query(
+          collection(db, "suggestions"),
+          where("uid", "==", currentUser.uid)
+        );
+
+        const querySnapshot = await getDocs(messagesQuery);
+
+        const messages = [];
+
+        querySnapshot.forEach(function(doc){
+          messages.push(doc.data());
+        });
+
+        messages.sort(function(a, b){
+          return (b.createdAtMs || 0) - (a.createdAtMs || 0);
+        });
+
+        messagesList.innerHTML = "";
+
+        if(messages.length === 0){
+          messagesList.innerHTML = `
+            <div class="empty">
+              You have not submitted any messages yet.
+            </div>
+          `;
+          return;
+        }
+
+        messages.forEach(function(item){
+          const messageDiv = document.createElement("div");
+          messageDiv.className = "message-item";
+
+          messageDiv.innerHTML = `
+            <div class="message-top">
+              <span>${item.type}</span>
+              <span>${item.date}</span>
+            </div>
+
+            <div class="message-name">
+              ${item.name}
+            </div>
+
+            <div class="message-email">
+              ${item.email}
+            </div>
+
+            <div class="message-text">
+              ${item.message}
+            </div>
+          `;
+
+          messagesList.appendChild(messageDiv);
+        });
+      } catch(error){
+        showError("Could not load messages. Please try again.");
+        messagesList.innerHTML = `
+          <div class="empty">
+            Unable to load messages right now.
+          </div>
+        `;
+      }
+    }
+
+    onAuthStateChanged(auth, function(user){
+      if(!user){
+        window.location.href = "login.html";
+        return;
+      }
+
+      if(!user.emailVerified){
+        window.location.href = "login.html";
+        return;
+      }
+
+      currentUser = user;
+
+      document.getElementById("email").value = user.email;
+      document.getElementById("name").value = user.displayName || "";
 
       loadMessages();
     });
 
-    clearMessagesBtn.addEventListener("click", function(){
-      if(!isAdmin){
+    suggestionForm.addEventListener("submit", async function(event){
+      event.preventDefault();
+
+      if(!currentUser){
+        showError("Please log in before submitting a message.");
         return;
       }
 
-      const confirmDelete =
-        confirm("Are you sure you want to clear all saved messages?");
+      const messageData = {
+        uid: currentUser.uid,
+        name: document.getElementById("name").value.trim(),
+        email: currentUser.email,
+        type: document.getElementById("type").value,
+        message: document.getElementById("messageBox").value.trim(),
+        date: new Date().toLocaleString(),
+        createdAtMs: Date.now(),
+        createdAt: serverTimestamp()
+      };
 
-      if(confirmDelete){
-        localStorage.removeItem("ddSuggestions");
+      try{
+        await addDoc(collection(db, "suggestions"), messageData);
+
+        suggestionForm.reset();
+        document.getElementById("email").value = currentUser.email;
+        document.getElementById("name").value = currentUser.displayName || "";
+
+        showSuccess();
         loadMessages();
+      } catch(error){
+        showError("Message could not be saved. Please try again.");
       }
     });
-
-    loadMessages();
   </script>
 
 </body>
