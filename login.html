@@ -166,6 +166,41 @@
       display:none;
     }
 
+    .password-box{
+      position:relative;
+      margin-bottom:22px;
+    }
+
+    .password-box input{
+      margin-bottom:0;
+      padding-right:60px;
+    }
+
+    .eye-btn{
+      position:absolute;
+      right:16px;
+      top:50%;
+      transform:translateY(-50%);
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      color:#142033;
+      padding:4px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .eye-btn:hover{
+      color:#315f96;
+    }
+
+    .eye-icon{
+      width:25px;
+      height:25px;
+      display:block;
+    }
+
     @media(max-width:600px){
       .auth-card{
         padding:35px 25px;
@@ -206,7 +241,18 @@
       <input type="email" id="email" placeholder="you@example.com" required>
 
       <label>Password</label>
-      <input type="password" id="password" placeholder="Enter password" required>
+
+      <div class="password-box">
+        <input type="password" id="password" placeholder="Enter password" required>
+
+        <button type="button" class="eye-btn" id="togglePassword">
+          <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+            <path d="M2.2 12s3.7-6 9.8-6 9.8 6 9.8 6-3.7 6-9.8 6-9.8-6-9.8-6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+            <path d="M4.5 7.5 3.2 5.8M8 5.9 7.5 3.8M12 5V3M16 5.9l.5-2.1M19.5 7.5l1.3-1.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
 
       <button type="submit" class="auth-btn" id="submitBtn">
         Log In
@@ -229,6 +275,34 @@
     const submitBtn = document.getElementById("submitBtn");
     const authForm = document.getElementById("authForm");
     const messageBox = document.getElementById("messageBox");
+
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+
+    const openEye = `
+      <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+        <path d="M2.2 12s3.7-6 9.8-6 9.8 6 9.8 6-3.7 6-9.8 6-9.8-6-9.8-6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+        <path d="M4.5 7.5 3.2 5.8M8 5.9 7.5 3.8M12 5V3M16 5.9l.5-2.1M19.5 7.5l1.3-1.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    `;
+
+    const closedEye = `
+      <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+        <path d="M4 10.5c2 3 4.7 4.5 8 4.5s6-1.5 8-4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M7 15.5l-1.2 2M10.5 16.5l-.4 2.2M14 16.5l.4 2.2M17 15.5l1.2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    `;
+
+    togglePassword.addEventListener("click", function(){
+      if(passwordInput.type === "password"){
+        passwordInput.type = "text";
+        togglePassword.innerHTML = closedEye;
+      } else {
+        passwordInput.type = "password";
+        togglePassword.innerHTML = openEye;
+      }
+    });
 
     let mode = "login";
 
