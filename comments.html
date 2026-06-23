@@ -474,9 +474,9 @@
             ${comment.text}
           </div>
 
-          <button class="delete-btn" data-id="${comment.id}" data-email="${comment.email}">
-  Delete Comment
-</button>
+          <button class="delete-btn" data-id="${comment.id}">
+            Delete Comment
+          </button>
         `;
 
         commentsList.appendChild(commentDiv);
@@ -485,13 +485,19 @@
       const deleteButtons = document.querySelectorAll(".delete-btn");
 
 deleteButtons.forEach(function(button){
-  const commentEmail = button.getAttribute("data-email");
+  const commentId = button.getAttribute("data-id");
 
-  if(isAdmin || commentEmail.toLowerCase() === currentUserEmail.toLowerCase()){
+  const matchingComment = comments.find(function(comment){
+    return comment.id === commentId;
+  });
+
+  if(
+    isAdmin ||
+    matchingComment.email.toLowerCase() === currentUserEmail.toLowerCase()
+  ){
     button.style.display = "inline-block";
 
     button.addEventListener("click", function(){
-      const commentId = button.getAttribute("data-id");
       deleteComment(commentId);
     });
   }
