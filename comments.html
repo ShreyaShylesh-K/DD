@@ -413,53 +413,93 @@
 
   </main>
 
-  <script>
-    const ADMIN_EMAIL = "buttercupppg028@gmail.com";
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
-    const loggedIn = localStorage.getItem("ddLoggedIn");
-    const currentUserEmail = localStorage.getItem("ddUserEmail");
-    const currentUserName = localStorage.getItem("ddUserName");
+  import {
+    getAuth,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-    if(loggedIn !== "true" || !currentUserEmail){
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    deleteDoc,
+    doc,
+    query,
+    orderBy,
+    onSnapshot,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA7fHkvR6k_fgRuOJbxodkpkiE1jCDLf9g",
+    authDomain: "digital-diary-ca107.firebaseapp.com",
+    projectId: "digital-diary-ca107",
+    storageBucket: "digital-diary-ca107.firebasestorage.app",
+    messagingSenderId: "521769609216",
+    appId: "1:521769609216:web:0cdf66e7133503891250e5",
+    measurementId: "G-ZKTLBKSRRH"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const ADMIN_EMAIL = "buttercupppg028@gmail.com";
+
+  const commentForm = document.getElementById("commentForm");
+  const commentsList = document.getElementById("commentsList");
+  const successMessage = document.getElementById("successMessage");
+  const clearCommentsBtn = document.getElementById("clearCommentsBtn");
+  const adminBadge = document.getElementById("adminBadge");
+  const commentDescription = document.getElementById("commentDescription");
+
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const commentText = document.getElementById("commentText");
+
+  let currentUser = null;
+  let isAdmin = false;
+
+  onAuthStateChanged(auth, function(user){
+    if(!user){
       window.location.href = "login.html";
+      return;
     }
 
-    const isAdmin =
-      currentUserEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-    const commentForm = document.getElementById("commentForm");
-    const commentsList = document.getElementById("commentsList");
-    const successMessage = document.getElementById("successMessage");
-    const clearCommentsBtn = document.getElementById("clearCommentsBtn");
-    const adminBadge = document.getElementById("adminBadge");
-    const commentDescription = document.getElementById("commentDescription");
-
-    const nameInput = document.getElementById("name");
-    const emailInput = document.getElementById("email");
-
-    if(currentUserName){
-      nameInput.value = currentUserName;
+    if(!user.emailVerified){
+      window.location.href = "login.html";
+      return;
     }
 
-    if(currentUserEmail){
-      emailInput.value = currentUserEmail;
-      emailInput.readOnly = true;
-    }
+    currentUser = user;
+    isAdmin = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+    nameInput.value = user.displayName || "";
+    emailInput.value = user.email;
+    emailInput.readOnly = true;
 
     if(isAdmin){
       adminBadge.innerHTML = `<span class="admin-badge">Creator View</span>`;
       commentDescription.innerText =
-        "You are logged in as creator, so you can delete any comment.";
-      clearCommentsBtn.style.display = "inline-block";
+        "You are logged in as creator, so you can delete comments.";
     }
 
-    function loadComments(){
-      const comments =
-        JSON.parse(localStorage.getItem("ddPublicComments")) || [];
+    loadComments();
+  });
 
+  function loadComments(){
+    const commentsQuery = query(
+      collection(db, "comments"),
+      orderBy("createdAtMs", "desc")
+    );
+
+    onSnapshot(commentsQuery, function(snapshot){
       commentsList.innerHTML = "";
 
-      if(comments.length === 0){
+      if(snapshot.empty){
         commentsList.innerHTML = `
           <div class="empty">
             No comments yet. Be the first to post something.
@@ -468,130 +508,96 @@
         return;
       }
 
-      comments.slice().reverse().forEach(function(comment){
+      snapshot.forEach(function(document){
+        const comment = document.data();
+        const commentId = document.id;
+
         const commentDiv = document.createElement("div");
         commentDiv.className = "comment-item";
 
-        const creatorBadge =
-  comment.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
-    ? '<div class="creator-badge">🌷 Creator of DD</div>'
-    : '';
+        const isCreatorComment =
+          comment.email &&
+          comment.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
-commentDiv.innerHTML = `
-  <div class="comment-top">
-    <span>${comment.date}</span>
-    <span>${comment.id}</span>
-  </div>
+        const creatorBadge = isCreatorComment
+          ? '<div class="creator-badge">🌷 Creator of DD</div>'
+          : '';
 
-  <div class="comment-name">
-  ${
-    comment.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
-      ? `✨ Shae ✨`
-      : comment.name
-  }
-</div>
+        const displayName = isCreatorComment
+          ? "✨ Shae ✨"
+          : comment.name;
 
-  ${creatorBadge}
+        commentDiv.innerHTML = `
+          <div class="comment-top">
+            <span>${comment.date}</span>
+            <span>${commentId}</span>
+          </div>
 
-  <div class="comment-text">
-    ${comment.text}
-  </div>
+          <div class="comment-name">
+            ${displayName}
+          </div>
 
-  <button class="delete-btn" data-id="${comment.id}">
-    Delete Comment
-  </button>
-`;
+          ${creatorBadge}
+
+          <div class="comment-text">
+            ${comment.text}
+          </div>
+
+          <button class="delete-btn" data-id="${commentId}">
+            Delete Comment
+          </button>
+        `;
 
         commentsList.appendChild(commentDiv);
+
+        const deleteButton = commentDiv.querySelector(".delete-btn");
+
+        if(isAdmin || comment.uid === currentUser.uid){
+          deleteButton.style.display = "inline-block";
+
+          deleteButton.addEventListener("click", async function(){
+            const confirmDelete =
+              confirm("Are you sure you want to delete this comment?");
+
+            if(confirmDelete){
+              await deleteDoc(doc(db, "comments", commentId));
+            }
+          });
+        }
       });
-
-      const deleteButtons = document.querySelectorAll(".delete-btn");
-
-deleteButtons.forEach(function(button){
-  const commentId = button.getAttribute("data-id");
-
-  const matchingComment = comments.find(function(comment){
-    return comment.id === commentId;
-  });
-
-  if(
-    isAdmin ||
-    matchingComment.email.toLowerCase() === currentUserEmail.toLowerCase()
-  ){
-    button.style.display = "inline-block";
-
-    button.addEventListener("click", function(){
-      deleteComment(commentId);
     });
   }
-});
+
+  commentForm.addEventListener("submit", async function(event){
+    event.preventDefault();
+
+    if(!currentUser){
+      return;
     }
 
-    function deleteComment(commentId){
-      const confirmDelete =
-        confirm("Are you sure you want to delete this comment?");
+    const comment = {
+      uid: currentUser.uid,
+      name: nameInput.value.trim(),
+      email: currentUser.email,
+      text: commentText.value.trim(),
+      date: new Date().toLocaleString(),
+      createdAtMs: Date.now(),
+      createdAt: serverTimestamp()
+    };
 
-      if(!confirmDelete){
-        return;
-      }
+    await addDoc(collection(db, "comments"), comment);
 
-      const comments =
-        JSON.parse(localStorage.getItem("ddPublicComments")) || [];
+    commentText.value = "";
 
-      const updatedComments = comments.filter(function(comment){
-        return comment.id !== commentId;
-      });
+    successMessage.style.display = "block";
 
-      localStorage.setItem("ddPublicComments", JSON.stringify(updatedComments));
+    setTimeout(function(){
+      successMessage.style.display = "none";
+    }, 3000);
+  });
 
-      loadComments();
-    }
-
-    commentForm.addEventListener("submit", function(event){
-      event.preventDefault();
-
-      const comment = {
-        id: "comment-" + Date.now(),
-        name: nameInput.value,
-        email: emailInput.value,
-        text: document.getElementById("commentText").value,
-        date: new Date().toLocaleString()
-      };
-
-      const comments =
-        JSON.parse(localStorage.getItem("ddPublicComments")) || [];
-
-      comments.push(comment);
-
-      localStorage.setItem("ddPublicComments", JSON.stringify(comments));
-
-      document.getElementById("commentText").value = "";
-
-      successMessage.style.display = "block";
-
-      setTimeout(function(){
-        successMessage.style.display = "none";
-      }, 3000);
-
-      loadComments();
-    });
-
-    clearCommentsBtn.addEventListener("click", function(){
-      if(!isAdmin){
-        return;
-      }
-
-      const confirmClear =
-        confirm("Are you sure you want to delete ALL comments?");
-
-      if(confirmClear){
-        localStorage.removeItem("ddPublicComments");
-        loadComments();
-      }
-    });
-
-    loadComments();
-  </script>
+  clearCommentsBtn.style.display = "none";
+</script>
 
 </body>
 </html>
