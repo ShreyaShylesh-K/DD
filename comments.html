@@ -238,13 +238,6 @@
       margin-bottom:7px;
     }
 
-    .comment-email{
-      color:#315f96;
-      font-size:0.95rem;
-      margin-bottom:16px;
-      word-break:break-word;
-    }
-
     .comment-text{
       color:#667b92;
       line-height:1.8;
@@ -363,7 +356,7 @@
         <h2>Post a Comment</h2>
 
         <p>
-          Share something with the DD community. Be kind, honest, and respectful.
+          Share something with the DD community. Be kind, honest, and respectful. Your email address will remain private and will not be shown publicly.
         </p>
 
         <form id="commentForm">
@@ -372,7 +365,7 @@
           <input type="text" id="name" placeholder="Enter your name" required>
 
           <label>Your Email</label>
-          <input type="email" id="email" placeholder="you@example.com" required>
+          <input type="email" id="email" readonly required>
 
           <label>Your Comment</label>
           <textarea id="commentText" placeholder="Write your comment here..." required></textarea>
@@ -475,10 +468,6 @@
 
           <div class="comment-name">
             ${comment.name}
-          </div>
-
-          <div class="comment-email">
-            ${comment.email}
           </div>
 
           <div class="comment-text">
