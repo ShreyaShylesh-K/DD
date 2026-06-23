@@ -484,8 +484,12 @@ commentDiv.innerHTML = `
   </div>
 
   <div class="comment-name">
-    ${comment.name}
-  </div>
+  ${
+    comment.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
+      ? `✨ Shae ✨`
+      : comment.name
+  }
+</div>
 
   ${creatorBadge}
 
